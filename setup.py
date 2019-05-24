@@ -8,4 +8,8 @@ setup(name='evopy',
       author_email='info@gandreadis.com',
       license='MIT',
       packages=['evopy'],
+      long_description=open('README.md').read(),
+      install_requires=[
+            "numpy",
+      ],
       zip_safe=False)
