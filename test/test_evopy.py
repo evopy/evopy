@@ -12,5 +12,5 @@ def simple_single_test():
 def simple_multiple_test():
     """Test whether evopy can successfully run for a simple evaluation function, with
     the multiple variance strategy."""
-    evopy = EvoPy(lambda x: pow(x, 2), 1, strategy=Strategy.MULTIPLE_VARIANCE)
+    evopy = EvoPy(lambda x: pow(x[0], 2) + pow(x[1], 3), 2, strategy=Strategy.MULTIPLE_VARIANCE)
     evopy.run()

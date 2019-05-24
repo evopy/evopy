@@ -65,7 +65,7 @@ class Individual:
         new_genotype = self.genotype + [self.strategy_parameters[i] * np.random.randn()
                                         for i in range(self.length)]
         global_scale_factor = np.random.randn() / (2 * self.length)
-        scale_factors = [np.random.randn() / 2 * np.sqrt(self.length)]
+        scale_factors = [np.random.randn() / 2 * np.sqrt(self.length) for _ in range(self.length)]
         new_strategy = [max(np.exp(global_scale_factor + scale_factors[i]), self._EPSILON) +
                         self.strategy_parameters[i] for i in range(self.length)]
         return Individual(new_genotype, self.strategy, new_strategy)
