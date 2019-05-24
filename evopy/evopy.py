@@ -9,7 +9,9 @@ class EvoPy:
     """Main class of the EvoPy package."""
 
     def __init__(self, fitness_function, individual_length, warm_start=None, generations=100,
-                 population_size=30, num_children=1, mean=0, std=1, maximize=False, reporter=None):
+
+                 population_size=30, num_children=1, mean=0, std=1, maximize=False,
+                 random_state=None, reporter=None):
         """Initializes an EvoPy instance.
 
         :param fitness_function: the fitness function on which the individuals are evaluated
@@ -21,6 +23,7 @@ class EvoPy:
         :param mean: the mean for sampling the random offsets of the initial population
         :param std: the standard deviation for sampling the random offsets of the initial population
         :param maximize: whether the fitness function should be maximized or minimized
+        :param random_state: a numerical seed to use to make execution deterministic
         :param reporter: callback to be invoked at each generation with a ProgressReport as argument
         """
         self.fitness_function = fitness_function
@@ -32,7 +35,11 @@ class EvoPy:
         self.mean = mean
         self.std = std
         self.maximize = maximize
+        self.random_state = random_state
         self.reporter = reporter
+
+        if self.random_state is not None:
+            np.random.seed(self.random_state)
 
     def run(self):
         """Run the evolutionary strategy algorithm.

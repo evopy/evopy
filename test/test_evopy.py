@@ -8,6 +8,15 @@ def test_simple_use_case():
     evopy.run()
 
 
+def test_random_seed():
+    """Test whether passing a random seed leads to deterministic outputs.
+
+    This cannot be ascertained beyond doubt, but with reasonable certainty.
+    """
+    evopy = EvoPy(lambda x: pow(x, 2), 1, random_state=42)
+    assert round(evopy.run()[0], 4) == -0.0135
+
+
 def test_progress_reporting():
     """Test whether all generations are reported."""
     count = [0]
