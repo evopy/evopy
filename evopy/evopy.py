@@ -16,8 +16,8 @@ def run(fitness_function, individual_length, warm_start=None, generations=100, p
     :param generations: the number of generations to execute
     :param population_size: the population size of each generation
     :param num_children: the number of children generated per parent individual
-    :param mean: the mean for sampling the initial population
-    :param std: the standard deviation for sampling the initial population
+    :param mean: the mean for sampling the random offsets of the initial population
+    :param std: the standard deviation for sampling the random offsets of the initial population
     :param maximize: whether the fitness function should be maximized or minimized.
     :return: the best individual found during execution of the algorithm
     """
