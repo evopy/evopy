@@ -31,6 +31,10 @@ class Individual:
             self.strategy = strategy
             self.strategy_parameters = strategy_parameters
             self.reproduce = self._reproduce_multiple_variance
+        elif strategy == Strategy.FULL_VARIANCE and len(strategy_parameters) == 1000: #TODO: Calculate correct length of strategy_parameters
+            self.strategy = strategy
+            self.strategy_parameters = strategy_parameters
+            self.reproduce = self._reproduce_full_variance
 
     def evaluate(self, fitness_function):
         """Evaluate the genotype of the individual using the provided fitness function.
@@ -69,3 +73,19 @@ class Individual:
         new_strategy = [max(np.exp(global_scale_factor + scale_factors[i]), self._EPSILON) +
                         self.strategy_parameters[i] for i in range(self.length)]
         return Individual(new_genotype, self.strategy, new_strategy)
+
+    def _reproduce_full_variance(self):
+        """Create a single offspring individual from the set genotype and strategy.
+
+        This function uses the full variance strategy.
+
+        :return: an individual which is the offspring of the current instance
+        """
+        new_genotype = self.genotype # TODO: Add rotation
+        global_scale_factor = np.random.randn() / (2 * self.length)
+        scale_factors = [np.random.randn() / 2 * np.sqrt(self.length)]
+        new_variances = [max(np.exp(global_scale_factor + scale_factors[i]), self._EPSILON) +
+                         self.strategy_parameters[i] for i in range(self.length)]
+        new_rotations = [self.strategy_parameters[i] + np.random.randn() * 0.0873
+                         for i in range(self.length + 1, len(self.strategy_parameters))]
+        return Individual(new_genotype, self.strategy, new_variances + new_rotations)
