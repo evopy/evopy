@@ -10,6 +10,7 @@ class Individual:
     This class handles the reproduction of the individual, using both the genotype and the specified
     strategy.
     """
+    _EPSILON = 0.01
 
     def __init__(self, genotype, strategy, strategy_parameters):
         """Initialize the Individual.
@@ -51,7 +52,7 @@ class Individual:
         new_genotype = self.genotype + \
                        self.strategy_parameters[0] * np.random.randn(self.length)
         scale_factor = np.random.randn() / (2 * self.length)
-        new_strategy = [max(self.strategy_parameters[0] * np.exp(scale_factor), 0.01)]
+        new_strategy = [max(self.strategy_parameters[0] * np.exp(scale_factor), self._EPSILON)]
         return Individual(new_genotype, self.strategy, new_strategy)
 
     def _reproduce_multiple_variance(self):
@@ -65,6 +66,6 @@ class Individual:
                                         for i in range(self.length)]
         global_scale_factor = np.random.randn() / (2 * self.length)
         scale_factors = [np.random.randn() / 2 * np.sqrt(self.length)]
-        new_strategy = [self.strategy_parameters[i] + np.exp(global_scale_factor + scale_factors[i])
-                        for i in range(self.length)]
+        new_strategy = [max(np.exp(global_scale_factor + scale_factors[i]), self._EPSILON) +
+                        self.strategy_parameters[i] for i in range(self.length)]
         return Individual(new_genotype, self.strategy, new_strategy)
