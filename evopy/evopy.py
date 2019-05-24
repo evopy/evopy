@@ -7,7 +7,7 @@ def run(fitness_function, individual_length, warm_start=None, generations=100, p
     if individual_length == 0:
         return
 
-    if not warm_start:
+    if warm_start is not None:
         warm_start = np.zeros(individual_length)
 
     population = _init_population(population_size, individual_length, mean, std, warm_start)
