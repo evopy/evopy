@@ -27,10 +27,12 @@ def run(fitness_function, individual_length, warm_start=None, generations=100, p
         warm_start = np.zeros(individual_length)
 
     population = _init_population(population_size, individual_length, mean, std, warm_start)
-    best = sorted(population, key=fitness_function, reverse=maximize)[0]
+    best = sorted(population, reverse=maximize,
+                  key=lambda individual: individual.evaluate(fitness_function))[0]
     for _ in range(generations):
         children = [parent.reproduce() for _ in range(num_children) for parent in population]
-        population = sorted(children + population, key=fitness_function, reverse=maximize)
+        population = sorted(children + population, reverse=maximize,
+                            key=lambda individual: individual.evaluate(fitness_function))
         population = population[:population_size]
 
         if not maximize:
