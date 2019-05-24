@@ -42,5 +42,5 @@ def run(fitness_function, individual_length, warm_start=None, generations=100, p
 
 def _init_population(population_size, individual_length, mean, std, offset):
     return [
-        Individual(offset + np.random.normal(loc=mean, scale=std, size=(len(individual_length))),
+        Individual(offset + np.random.normal(loc=mean, scale=std, size=individual_length),
                    np.random.randn()) for _ in range(population_size)]
