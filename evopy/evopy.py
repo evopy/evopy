@@ -2,13 +2,15 @@
 import numpy as np
 
 from evopy.individual import Individual
+from evopy.strategy import Strategy
 
 
 class EvoPy:
     """Main class of the EvoPy package."""
 
     def __init__(self, fitness_function, individual_length, warm_start=None, generations=100,
-                 population_size=30, num_children=1, mean=0, std=1, maximize=False):
+                 population_size=30, num_children=1, mean=0, std=1, maximize=False,
+                 strategy=Strategy.SINGLE_VARIANCE):
         """Initializes an EvoPy instance.
 
         :param fitness_function: the fitness function on which the individuals are evaluated
@@ -19,7 +21,9 @@ class EvoPy:
         :param num_children: the number of children generated per parent individual
         :param mean: the mean for sampling the random offsets of the initial population
         :param std: the standard deviation for sampling the random offsets of the initial population
-        :param maximize: whether the fitness function should be maximized or minimized.
+        :param maximize: whether the fitness function should be maximized or minimized
+        :param strategy: the strategy used to generate offspring by individuals. For more
+                         information, check the Strategy enum
         """
         self.fitness_function = fitness_function
         self.individual_length = individual_length
@@ -30,6 +34,7 @@ class EvoPy:
         self.mean = mean
         self.std = std
         self.maximize = maximize
+        self.strategy = strategy
 
     def run(self):
         """Run the evolutionary strategy algorithm."""
@@ -54,11 +59,18 @@ class EvoPy:
         return best.genotype
 
     def _init_population(self):
+        if self.strategy == Strategy.SINGLE_VARIANCE:
+            strategy_parameters = [np.random.randn()]
+        elif self.strategy == Strategy.MULTIPLE_VARIANCE:
+            strategy_parameters = np.random.randn(self.individual_length)
+        else:
+            strategy_parameters = np.random.randn(
+                (self.individual_length + 1) * self.individual_length / 2)
         return [
             Individual(
                 self.warm_start + np.random.normal(
                     loc=self.mean, scale=self.std, size=self.individual_length
                 ),
-                np.random.randn()
+                self.strategy, strategy_parameters
             ) for _ in range(self.population_size)
         ]
