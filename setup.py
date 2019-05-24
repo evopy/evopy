@@ -11,5 +11,7 @@ setup(name='evopy',
       long_description=open('README.md').read(),
       install_requires=[
             "numpy",
+            "nose",
+            "pylint",
       ],
       zip_safe=False)
