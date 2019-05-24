@@ -7,7 +7,7 @@ Evolutionary Strategies made simple
 To run all tests, run:
 
 ```
-no
+nosetests
 ```
 
 To check your code style, run:

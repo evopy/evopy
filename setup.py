@@ -9,9 +9,14 @@ setup(name='evopy',
       license='MIT',
       packages=['evopy'],
       long_description=open('README.md').read(),
+      long_description_content_type="text/markdown",
       install_requires=[
-            "numpy",
-            "nose",
-            "pylint",
+          "numpy",
+          "nose",
+          "pylint",
       ],
-      zip_safe=False)
+      classifiers=[
+          "Programming Language :: Python :: 3",
+          "License :: OSI Approved :: MIT License",
+          "Operating System :: OS Independent",
+      ])
