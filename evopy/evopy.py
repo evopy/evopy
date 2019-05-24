@@ -23,7 +23,7 @@ def run(fitness_function, individual_length, warm_start=None, generations=100, p
     if individual_length == 0:
         return None
 
-    if warm_start is not None:
+    if warm_start is None:
         warm_start = np.zeros(individual_length)
 
     population = _init_population(population_size, individual_length, mean, std, warm_start)
@@ -39,7 +39,7 @@ def run(fitness_function, individual_length, warm_start=None, generations=100, p
             best = population[0] if population[0].fitness > best.fitness else best
         else:
             best = population[0] if population[0].fitness < best.fitness else best
-    return best
+    return best.weights
 
 
 def _init_population(population_size, individual_length, mean, std, offset):

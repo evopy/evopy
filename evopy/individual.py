@@ -35,4 +35,6 @@ class Individual:
         :param fitness_function: the fitness function to evaluate the individual with
         :return: the value of the fitness function using the individuals weight
         """
-        return fitness_function(self.weights)
+        self.fitness = fitness_function(self.weights)
+
+        return self.fitness
