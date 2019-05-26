@@ -1,6 +1,7 @@
 """Module containing the individuals of the evolutionary strategy algorithm."""
 import numpy as np
 
+from evopy.utils import random_with_seed
 
 class Individual:
     """The individual of the evolutionary strategy algorithm.
@@ -9,14 +10,16 @@ class Individual:
     strategy.
     """
 
-    def __init__(self, genotype, strategy):
+    def __init__(self, genotype, strategy, random_seed=None):
         """Initialize the Individual.
 
         :param genotype: the genotype of the individual
         :param strategy: the strategy parameters of the individual
+        :param random_seed: the seed to use for the random number generator
         """
         self.genotype = genotype
         self.strategy = strategy
+        self.random_seed = random_seed
         self.fitness = None
 
     def reproduce(self):
@@ -24,8 +27,9 @@ class Individual:
 
         :return: an individual which is the offspring of the current instance
         """
-        new_genotype = self.genotype + self.strategy * np.random.randn(len(self.genotype))
-        scale_factor = np.random.randn() / (2 * len(self.genotype))
+        new_genotype = self.genotype + self.strategy * random_with_seed(self.random_seed) \
+                    .randn(len(self.genotype))
+        scale_factor = random_with_seed(self.random_seed).randn() / (2 * len(self.genotype))
         new_strategy = max(self.strategy * np.exp(scale_factor), 0.01)
         return Individual(new_genotype, new_strategy)
 
