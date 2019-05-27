@@ -13,4 +13,4 @@ class ProgressReport:
         """
         self.generation = generation
         self.best_genotype = best_genotype
-        self.fitness = best_fitness
+        self.best_fitness = best_fitness
