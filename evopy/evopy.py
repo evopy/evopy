@@ -78,6 +78,8 @@ class EvoPy:
         elif self.strategy == Strategy.FULL_VARIANCE:
             strategy_parameters = random_with_seed(self.random_seed).randn(
                 int((self.individual_length + 1) * self.individual_length / 2))
+        else:
+            raise ValueError("Provided strategy parameter was not an instance of Strategy")
         return [
             Individual(
                 self.warm_start + random_with_seed(self.random_seed).normal(

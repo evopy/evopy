@@ -10,6 +10,11 @@ class Individual:
 
     This class handles the reproduction of the individual, using both the genotype and the specified
     strategy.
+
+    For the full variance reproduction strategy, we adopt the implementation as described in:
+    [1] Schwefel, Hans-Paul. (1995). Evolution Strategies I: Variants and their computational
+        implementation. G. Winter, J. Perieaux, M. Gala, P. Cuesta (Eds.), Proceedings of Genetic
+        Algorithms in Engineering and Computer Science, John Wiley & Sons.
     """
     _BETA = 0.0873
     _EPSILON = 0.01
@@ -82,12 +87,12 @@ class Individual:
                           for i in range(self.length)]
         return Individual(new_genotype, self.strategy, new_parameters)
 
-    # pylint: disable=C0103
-    # Notation used in Evolution Strategies I paper
+    # pylint: disable=invalid-name
     def _reproduce_full_variance(self):
         """Create a single offspring individual from the set genotype and strategy.
 
-        This function uses the full variance strategy.
+        This function uses the full variance strategy, as described in [1]. To emphasize this, the
+        variable names of [1] are used in this function.
 
         :return: an individual which is the offspring of the current instance
         """
@@ -99,9 +104,8 @@ class Individual:
                          for i in range(self.length)]
         new_rotations = [self.strategy_parameters[i] + self.random.randn() * self._BETA
                          for i in range(self.length, len(self.strategy_parameters))]
-        new_rotations = [rotation if rotation < np.pi / 2 else rotation - np.pi
-                         for rotation in new_rotations]
-        new_rotations = [rotation if rotation > -np.pi / 2 else rotation + np.pi
+        new_rotations = [rotation if abs(rotation) < np.pi
+                         else rotation - np.sign(rotation) * 2 * np.pi
                          for rotation in new_rotations]
         T = np.identity(self.length)
         for p in range(self.length - 1):
