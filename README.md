@@ -7,6 +7,20 @@
 
 Use evopy to easily optimize a vector of floats in Python.
 
+## 🏗 Installation
+
+All you need to use evopy is [Python 3](https://www.python.org/downloads/)! Run this command to fetch evopy from PyPI:
+
+```
+pip install evopy
+```
+
+Then you can import `EvoPy` like this:
+
+```python
+from evopy import EvoPy
+```
+
 ## ⏩ Usage
 
 Let's say we wanted to find the optimum of a parabola, without using exact methods from calculus! With Evopy, this is as easy as writing the following two lines:
@@ -26,15 +40,6 @@ best_coordinates = evopy.run()
 ```
 
 Compared to the previous example, we have interchanged the fitness function for a more complex one, set the dimensionality to 2, and given the algorithm more time to find an optimum by setting a higher generation and individual count than the default.
-
-
-## 🏗 Installation
-
-All you need to use evopy is [Python 3](https://www.python.org/downloads/)! Run this command to fetch evopy from PyPI:
-
-```
-pip install evopy
-```
 
 ## ⛏ Development
 
