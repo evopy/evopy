@@ -7,7 +7,6 @@ def random_with_seed(seed):
     :param seed: the seed to use for the random number generator
     """
     if seed is None:
-        # pylint: disable=W0212
         return np.random.mtrand._rand
     if isinstance(seed, int):
         return np.random.RandomState(seed)
