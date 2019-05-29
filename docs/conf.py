@@ -60,3 +60,6 @@ html_static_path = ['_static']
 
 # Generate API docs
 os.system("sphinx-apidoc -o api/ ../evopy")
+
+# Set the master document
+master_doc = 'index'
