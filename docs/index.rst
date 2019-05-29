@@ -1,4 +1,4 @@
-Documentation for evopy
+API Docs for evopy
 =================================
 
 evopy: Evolutionary Strategies made simple!
@@ -7,7 +7,6 @@ evopy: Evolutionary Strategies made simple!
    :maxdepth: 2
    :caption: Contents:
 
-   Tutorial
    api/evopy
 
 
