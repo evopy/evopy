@@ -39,7 +39,7 @@ evopy = EvoPy(lambda X: 5 + sum([(x**2 - 5 * np.cos(2 * np.pi * x)) for x in X])
 best_coordinates = evopy.run()
 ```
 
-Compared to the previous example, we have interchanged the fitness function for a more complex one, set the dimensionality to 2, and given the algorithm more time to find an optimum by setting a higher generation and individual count than the default.
+Compared to the previous example, we have interchanged the fitness function for a more complex one, set the dimensionality to `2`, and given the algorithm more time to find an optimum by setting a higher generation and individual count than the default.
 
 ## ⛏ Development
 
