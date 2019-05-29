@@ -2,6 +2,7 @@
 import numpy as np
 
 from evopy.individual import Individual
+from evopy.utils import random_with_seed
 from evopy.progress_report import ProgressReport
 
 
@@ -9,7 +10,8 @@ class EvoPy:
     """Main class of the EvoPy package."""
 
     def __init__(self, fitness_function, individual_length, warm_start=None, generations=100,
-                 population_size=30, num_children=1, mean=0, std=1, maximize=False, reporter=None):
+                 population_size=30, num_children=1, mean=0, std=1, maximize=False,
+                 random_seed=None, reporter=None):
         """Initializes an EvoPy instance.
 
         :param fitness_function: the fitness function on which the individuals are evaluated
@@ -21,6 +23,7 @@ class EvoPy:
         :param mean: the mean for sampling the random offsets of the initial population
         :param std: the standard deviation for sampling the random offsets of the initial population
         :param maximize: whether the fitness function should be maximized or minimized
+        :param random_seed: the seed to use for the random number generator
         :param reporter: callback to be invoked at each generation with a ProgressReport as argument
         """
         self.fitness_function = fitness_function
@@ -32,6 +35,7 @@ class EvoPy:
         self.mean = mean
         self.std = std
         self.maximize = maximize
+        self.random_seed = random_seed
         self.reporter = reporter
 
     def run(self):
@@ -65,9 +69,10 @@ class EvoPy:
     def _init_population(self):
         return [
             Individual(
-                self.warm_start + np.random.normal(
+                self.warm_start + random_with_seed(self.random_seed).normal(
                     loc=self.mean, scale=self.std, size=self.individual_length
                 ),
-                np.random.randn()
+                random_with_seed(self.random_seed).randn(),
+                random_seed=self.random_seed
             ) for _ in range(self.population_size)
         ]
