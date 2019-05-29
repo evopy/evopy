@@ -14,6 +14,7 @@ setup(name='evopy',
           "numpy",
           "nose",
           "pylint",
+          "parameterized",
       ],
       classifiers=[
           "Programming Language :: Python :: 3",
