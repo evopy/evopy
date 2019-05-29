@@ -15,6 +15,8 @@ setup(name='evopy',
           "nose",
           "pylint",
           "parameterized",
+          "sphinx",
+          "sphinx-rtd-theme",
       ],
       classifiers=[
           "Programming Language :: Python :: 3",
