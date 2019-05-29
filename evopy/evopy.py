@@ -2,6 +2,7 @@
 import numpy as np
 
 from evopy.individual import Individual
+from evopy.strategy import Strategy
 from evopy.utils import random_with_seed
 from evopy.progress_report import ProgressReport
 
@@ -11,7 +12,7 @@ class EvoPy:
 
     def __init__(self, fitness_function, individual_length, warm_start=None, generations=100,
                  population_size=30, num_children=1, mean=0, std=1, maximize=False,
-                 random_seed=None, reporter=None):
+                 strategy=Strategy.SINGLE_VARIANCE, random_seed=None, reporter=None):
         """Initializes an EvoPy instance.
 
         :param fitness_function: the fitness function on which the individuals are evaluated
@@ -23,6 +24,8 @@ class EvoPy:
         :param mean: the mean for sampling the random offsets of the initial population
         :param std: the standard deviation for sampling the random offsets of the initial population
         :param maximize: whether the fitness function should be maximized or minimized
+        :param strategy: the strategy used to generate offspring by individuals. For more
+                         information, check the Strategy enum
         :param random_seed: the seed to use for the random number generator
         :param reporter: callback to be invoked at each generation with a ProgressReport as argument
         """
@@ -35,6 +38,7 @@ class EvoPy:
         self.mean = mean
         self.std = std
         self.maximize = maximize
+        self.strategy = strategy
         self.random_seed = random_seed
         self.reporter = reporter
 
@@ -67,12 +71,21 @@ class EvoPy:
         return best.genotype
 
     def _init_population(self):
+        if self.strategy == Strategy.SINGLE_VARIANCE:
+            strategy_parameters = [random_with_seed(self.random_seed).randn()]
+        elif self.strategy == Strategy.MULTIPLE_VARIANCE:
+            strategy_parameters = random_with_seed(self.random_seed).randn(self.individual_length)
+        elif self.strategy == Strategy.FULL_VARIANCE:
+            strategy_parameters = random_with_seed(self.random_seed).randn(
+                int((self.individual_length + 1) * self.individual_length / 2))
+        else:
+            raise ValueError("Provided strategy parameter was not an instance of Strategy")
         return [
             Individual(
                 self.warm_start + random_with_seed(self.random_seed).normal(
                     loc=self.mean, scale=self.std, size=self.individual_length
                 ),
-                random_with_seed(self.random_seed).randn(),
+                self.strategy, strategy_parameters,
                 random_seed=self.random_seed
             ) for _ in range(self.population_size)
         ]
