@@ -108,3 +108,6 @@ venv.bak/
 # docs
 docs/api
 docs/_build
+
+# coverage
+cover/

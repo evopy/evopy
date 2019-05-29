@@ -74,3 +74,9 @@ To check your code style, run:
 ```
 pylint evopy
 ```
+
+To measure your code coverage, run:
+
+```
+nosetests --with-coverage --cover-package=evopy --cover-html --cover-branches --cover-erase
+```
