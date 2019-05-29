@@ -63,7 +63,7 @@ class EvoPy:
             strategy_parameters = [np.random.randn()]
         elif self.strategy == Strategy.MULTIPLE_VARIANCE:
             strategy_parameters = np.random.randn(self.individual_length)
-        else:
+        elif self.strategy == Strategy.FULL_VARIANCE:
             strategy_parameters = np.random.randn(
                 int((self.individual_length + 1) * self.individual_length / 2))
         return [

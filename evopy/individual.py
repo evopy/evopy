@@ -10,6 +10,7 @@ class Individual:
     This class handles the reproduction of the individual, using both the genotype and the specified
     strategy.
     """
+    _BETA = 0.0873
     _EPSILON = 0.01
 
     def __init__(self, genotype, strategy, strategy_parameters):
@@ -23,18 +24,14 @@ class Individual:
         self.genotype = genotype
         self.length = len(genotype)
         self.fitness = None
+        self.strategy = strategy
+        self.strategy_parameters = strategy_parameters
         if strategy == Strategy.SINGLE_VARIANCE and len(strategy_parameters) == 1:
-            self.strategy = strategy
-            self.strategy_parameters = strategy_parameters
             self.reproduce = self._reproduce_single_variance
         elif strategy == Strategy.MULTIPLE_VARIANCE and len(strategy_parameters) == self.length:
-            self.strategy = strategy
-            self.strategy_parameters = strategy_parameters
             self.reproduce = self._reproduce_multiple_variance
         elif strategy == Strategy.FULL_VARIANCE and len(strategy_parameters) == self.length * (
                 self.length + 1) / 2:
-            self.strategy = strategy
-            self.strategy_parameters = strategy_parameters
             self.reproduce = self._reproduce_full_variance
 
     def evaluate(self, fitness_function):
@@ -56,9 +53,9 @@ class Individual:
         """
         new_genotype = self.genotype + \
                        self.strategy_parameters[0] * np.random.randn(self.length)
-        scale_factor = np.random.randn() / (2 * self.length)
-        new_strategy = [max(self.strategy_parameters[0] * np.exp(scale_factor), self._EPSILON)]
-        return Individual(new_genotype, self.strategy, new_strategy)
+        scale_factor = np.random.randn() * np.sqrt(1 / (2 * self.length))
+        new_parameters = [max(self.strategy_parameters[0] * np.exp(scale_factor), self._EPSILON)]
+        return Individual(new_genotype, self.strategy, new_parameters)
 
     def _reproduce_multiple_variance(self):
         """Create a single offspring individual from the set genotype and strategy.
@@ -69,11 +66,13 @@ class Individual:
         """
         new_genotype = self.genotype + [self.strategy_parameters[i] * np.random.randn()
                                         for i in range(self.length)]
-        global_scale_factor = np.random.randn() / (2 * self.length)
-        scale_factors = [np.random.randn() / 2 * np.sqrt(self.length) for _ in range(self.length)]
-        new_strategy = [max(np.exp(global_scale_factor + scale_factors[i]), self._EPSILON) +
-                        self.strategy_parameters[i] for i in range(self.length)]
-        return Individual(new_genotype, self.strategy, new_strategy)
+        global_scale_factor = np.random.randn() * np.sqrt(1 / (2 * self.length))
+        scale_factors = [np.random.randn() * np.sqrt(1 / 2 * np.sqrt(self.length))
+                         for _ in range(self.length)]
+        new_parameters = [max(np.exp(global_scale_factor + scale_factors[i])
+                              * self.strategy_parameters[i], self._EPSILON)
+                          for i in range(self.length)]
+        return Individual(new_genotype, self.strategy, new_parameters)
 
     # pylint: disable=C0103
     # Notation used in Evolution Strategies I paper
@@ -84,11 +83,13 @@ class Individual:
 
         :return: an individual which is the offspring of the current instance
         """
-        global_scale_factor = np.random.randn() / (2 * self.length)
-        scale_factors = [np.random.randn() / 2 * np.sqrt(self.length) for _ in range(self.length)]
-        new_variances = [max(np.exp(global_scale_factor + scale_factors[i]), self._EPSILON) +
-                         self.strategy_parameters[i] for i in range(self.length)]
-        new_rotations = [self.strategy_parameters[i] + np.random.randn() * 0.0873
+        global_scale_factor = np.random.randn() * np.sqrt(1 / (2 * self.length))
+        scale_factors = [np.random.randn() * np.sqrt(1 / 2 * np.sqrt(self.length))
+                         for _ in range(self.length)]
+        new_variances = [max(np.exp(global_scale_factor + scale_factors[i])
+                             * self.strategy_parameters[i], self._EPSILON)
+                         for i in range(self.length)]
+        new_rotations = [self.strategy_parameters[i] + np.random.randn() * self._BETA
                          for i in range(self.length, len(self.strategy_parameters))]
         new_rotations = [rotation if rotation < np.pi / 2 else rotation - np.pi
                          for rotation in new_rotations]
