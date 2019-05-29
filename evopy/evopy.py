@@ -2,9 +2,9 @@
 import numpy as np
 
 from evopy.individual import Individual
+from evopy.progress_report import ProgressReport
 from evopy.strategy import Strategy
 from evopy.utils import random_with_seed
-from evopy.progress_report import ProgressReport
 
 
 class EvoPy:
@@ -45,7 +45,7 @@ class EvoPy:
     def run(self):
         """Run the evolutionary strategy algorithm.
 
-        :return the best genotype found
+        :return: the best genotype found
         """
         if self.individual_length == 0:
             return None
