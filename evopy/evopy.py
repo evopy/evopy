@@ -65,7 +65,7 @@ class EvoPy:
             strategy_parameters = np.random.randn(self.individual_length)
         else:
             strategy_parameters = np.random.randn(
-                (self.individual_length + 1) * self.individual_length / 2)
+                int((self.individual_length + 1) * self.individual_length / 2))
         return [
             Individual(
                 self.warm_start + np.random.normal(

@@ -1,5 +1,6 @@
 """Module containing the individuals of the evolutionary strategy algorithm."""
 import numpy as np
+import math
 
 from evopy.strategy import Strategy
 
@@ -31,7 +32,7 @@ class Individual:
             self.strategy = strategy
             self.strategy_parameters = strategy_parameters
             self.reproduce = self._reproduce_multiple_variance
-        elif strategy == Strategy.FULL_VARIANCE and len(strategy_parameters) == 1000: #TODO: Calculate correct length of strategy_parameters
+        elif strategy == Strategy.FULL_VARIANCE and len(strategy_parameters) == self.length * (self.length + 1) / 2:
             self.strategy = strategy
             self.strategy_parameters = strategy_parameters
             self.reproduce = self._reproduce_full_variance
@@ -81,11 +82,23 @@ class Individual:
 
         :return: an individual which is the offspring of the current instance
         """
-        new_genotype = self.genotype # TODO: Add rotation
         global_scale_factor = np.random.randn() / (2 * self.length)
-        scale_factors = [np.random.randn() / 2 * np.sqrt(self.length)]
+        scale_factors = [np.random.randn() / 2 * np.sqrt(self.length) for _ in range(self.length)]
         new_variances = [max(np.exp(global_scale_factor + scale_factors[i]), self._EPSILON) +
                          self.strategy_parameters[i] for i in range(self.length)]
         new_rotations = [self.strategy_parameters[i] + np.random.randn() * 0.0873
-                         for i in range(self.length + 1, len(self.strategy_parameters))]
+                         for i in range(self.length, len(self.strategy_parameters))]
+        covariance_matrix = np.zeros((self.length, self.length))
+        for i in range(self.length):
+            for j in range(self.length):
+                if i == j:
+                    covariance_matrix[i,j] = new_variances[i]**2
+                else:
+                    if i < j:
+                        alpha = new_rotations[int(i * self.length - i * (i + 1) / 2 + j - i - 1)]
+                    else:
+                        alpha = new_rotations[int(j * self.length - j * (j + 1) / 2 + i - j - 1)]
+                    covariance_matrix[i,j] = 0.5 * (new_variances[i]**2 - new_variances[j]**2) \
+                                                * math.tan(2 * alpha)
+        new_genotype = self.genotype + np.random.multivariate_normal(np.zeros(self.length), covariance_matrix)
         return Individual(new_genotype, self.strategy, new_variances + new_rotations)
