@@ -2,7 +2,7 @@
 import numpy as np
 
 from evopy.strategy import Strategy
-
+from evopy.utils import random_with_seed
 
 class Individual:
     """The individual of the evolutionary strategy algorithm.
@@ -13,7 +13,7 @@ class Individual:
     _BETA = 0.0873
     _EPSILON = 0.01
 
-    def __init__(self, genotype, strategy, strategy_parameters):
+    def __init__(self, genotype, strategy, strategy_parameters, random_seed=None):
         """Initialize the Individual.
 
         :param genotype: the genotype of the individual
@@ -23,6 +23,8 @@ class Individual:
         """
         self.genotype = genotype
         self.length = len(genotype)
+        self.random_seed = random_seed
+        self.random = random_with_seed(self.random_seed)
         self.fitness = None
         self.strategy = strategy
         self.strategy_parameters = strategy_parameters
@@ -52,8 +54,8 @@ class Individual:
         :return: an individual which is the offspring of the current instance
         """
         new_genotype = self.genotype + \
-                       self.strategy_parameters[0] * np.random.randn(self.length)
-        scale_factor = np.random.randn() * np.sqrt(1 / (2 * self.length))
+                       self.strategy_parameters[0] * self.random.randn(self.length)
+        scale_factor = self.random.randn() * np.sqrt(1 / (2 * self.length))
         new_parameters = [max(self.strategy_parameters[0] * np.exp(scale_factor), self._EPSILON)]
         return Individual(new_genotype, self.strategy, new_parameters)
 
@@ -64,10 +66,10 @@ class Individual:
 
         :return: an individual which is the offspring of the current instance
         """
-        new_genotype = self.genotype + [self.strategy_parameters[i] * np.random.randn()
+        new_genotype = self.genotype + [self.strategy_parameters[i] * self.random.randn()
                                         for i in range(self.length)]
-        global_scale_factor = np.random.randn() * np.sqrt(1 / (2 * self.length))
-        scale_factors = [np.random.randn() * np.sqrt(1 / 2 * np.sqrt(self.length))
+        global_scale_factor = self.random.randn() * np.sqrt(1 / (2 * self.length))
+        scale_factors = [self.random.randn() * np.sqrt(1 / 2 * np.sqrt(self.length))
                          for _ in range(self.length)]
         new_parameters = [max(np.exp(global_scale_factor + scale_factors[i])
                               * self.strategy_parameters[i], self._EPSILON)
@@ -83,13 +85,13 @@ class Individual:
 
         :return: an individual which is the offspring of the current instance
         """
-        global_scale_factor = np.random.randn() * np.sqrt(1 / (2 * self.length))
-        scale_factors = [np.random.randn() * np.sqrt(1 / 2 * np.sqrt(self.length))
+        global_scale_factor = self.random.randn() * np.sqrt(1 / (2 * self.length))
+        scale_factors = [self.random.randn() * np.sqrt(1 / 2 * np.sqrt(self.length))
                          for _ in range(self.length)]
         new_variances = [max(np.exp(global_scale_factor + scale_factors[i])
                              * self.strategy_parameters[i], self._EPSILON)
                          for i in range(self.length)]
-        new_rotations = [self.strategy_parameters[i] + np.random.randn() * self._BETA
+        new_rotations = [self.strategy_parameters[i] + self.random.randn() * self._BETA
                          for i in range(self.length, len(self.strategy_parameters))]
         new_rotations = [rotation if rotation < np.pi / 2 else rotation - np.pi
                          for rotation in new_rotations]
@@ -104,5 +106,5 @@ class Individual:
                 T_pq[p][q] = -np.sin(new_rotations[j])
                 T_pq[q][p] = -T_pq[p][q]
                 T = np.matmul(T, T_pq)
-        new_genotype = self.genotype + np.matmul(T, np.random.randn(self.length))
+        new_genotype = self.genotype + np.matmul(T, self.random.randn(self.length))
         return Individual(new_genotype, self.strategy, new_variances + new_rotations)
