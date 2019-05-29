@@ -144,7 +144,9 @@ confidence=
 # either give multiple identifier separated by comma (,) or put this option
 # multiple time (only on the command line, not in the configuration file where
 # it should appear only once). See also the "--disable" option for examples.
-disable=c-extension-no-member
+disable=c-extension-no-member,
+          protected-access,
+          no-member
 
 
 [REPORTS]
