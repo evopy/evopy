@@ -115,5 +115,5 @@ class Individual:
                 T_pq[p][q] = -np.sin(new_rotations[j])
                 T_pq[q][p] = -T_pq[p][q]
                 T = np.matmul(T, T_pq)
-        new_genotype = self.genotype + np.matmul(T, self.random.randn(self.length))
+        new_genotype = self.genotype + T @ self.random.randn(self.length)
         return Individual(new_genotype, self.strategy, new_variances + new_rotations)
