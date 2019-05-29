@@ -1,6 +1,7 @@
 """A utility module for random number generation."""
 import numpy as np
 
+
 def random_with_seed(seed):
     """Return RandomState instances based on given seed.
 
