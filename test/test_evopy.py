@@ -2,21 +2,21 @@
 from evopy import EvoPy, Strategy
 
 
-def simple_single_variance_test():
+def test_simple_single_variance():
     """Test whether evopy can successfully run for a simple evaluation function, with
     the single variance strategy."""
     evopy = EvoPy(lambda x: pow(x, 2), 1, strategy=Strategy.SINGLE_VARIANCE)
     evopy.run()
 
 
-def simple_multiple_variance_test():
+def test_simple_multiple_variance():
     """Test whether evopy can successfully run for a simple evaluation function, with
     the multiple variance strategy."""
     evopy = EvoPy(lambda x: pow(x[0], 2) + pow(x[1], 3), 2, strategy=Strategy.MULTIPLE_VARIANCE)
     evopy.run()
 
 
-def simple_full_variance_test():
+def test_simple_full_variance():
     """Test whether evopy can successfully run for a simple evaluation function, with
     the full variance strategy."""
     evopy = EvoPy(lambda x: pow(x[0], 2) + pow(x[1], 3), 2, strategy=Strategy.FULL_VARIANCE)
