@@ -40,7 +40,12 @@ The main ingredient here is the fitness function (the lambda). This can also be 
 If the previous example seemed too simple to you, we can also look at the optimum of a more complex, two-dimensional function, like the [Rastrigin function](https://en.wikipedia.org/wiki/Rastrigin_function). We don't have to modify much in our previous code snippet to get this to work:
 
 ```python
-evopy = EvoPy(lambda X: 5 + sum([(x**2 - 5 * np.cos(2 * np.pi * x)) for x in X]), 2, generations=1000, population_size=100)
+evopy = EvoPy(
+    lambda X: 5 + sum([(x**2 - 5 * np.cos(2 * np.pi * x)) for x in X]), 
+    2, 
+    generations=1000, 
+    population_size=100
+)
 best_coordinates = evopy.run()
 ```
 
