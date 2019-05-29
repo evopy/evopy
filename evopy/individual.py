@@ -36,16 +36,15 @@ class Individual:
         self.strategy_parameters = strategy_parameters
         if not isinstance(strategy, Strategy):
             raise ValueError("Provided strategy parameter was not an instance of Strategy.")
+        if strategy == Strategy.SINGLE_VARIANCE and len(strategy_parameters) == 1:
+            self.reproduce = self._reproduce_single_variance
+        elif strategy == Strategy.MULTIPLE_VARIANCE and len(strategy_parameters) == self.length:
+            self.reproduce = self._reproduce_multiple_variance
+        elif strategy == Strategy.FULL_VARIANCE and len(strategy_parameters) == self.length * (
+                self.length + 1) / 2:
+            self.reproduce = self._reproduce_full_variance
         else:
-            if strategy == Strategy.SINGLE_VARIANCE and len(strategy_parameters) == 1:
-                self.reproduce = self._reproduce_single_variance
-            elif strategy == Strategy.MULTIPLE_VARIANCE and len(strategy_parameters) == self.length:
-                self.reproduce = self._reproduce_multiple_variance
-            elif strategy == Strategy.FULL_VARIANCE and len(strategy_parameters) == self.length * (
-                    self.length + 1) / 2:
-                self.reproduce = self._reproduce_full_variance
-            else:
-                raise ValueError("The length of the strategy parameters was not correct.")
+            raise ValueError("The length of the strategy parameters was not correct.")
 
     def evaluate(self, fitness_function):
         """Evaluate the genotype of the individual using the provided fitness function.
