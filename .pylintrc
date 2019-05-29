@@ -146,8 +146,7 @@ confidence=
 # it should appear only once). See also the "--disable" option for examples.
 disable=c-extension-no-member,
           protected-access,
-          no-member,
-          no-else-raise
+          no-member
 
 
 [REPORTS]
