@@ -4,3 +4,4 @@ pylint
 parameterized
 sphinx
 sphinx-rtd-theme
+codecov
