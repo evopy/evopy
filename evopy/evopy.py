@@ -40,6 +40,7 @@ class EvoPy:
         self.maximize = maximize
         self.strategy = strategy
         self.random_seed = random_seed
+        self.random = random_with_seed(self.random_seed)
         self.reporter = reporter
 
     def run(self):
@@ -68,20 +69,20 @@ class EvoPy:
 
     def _init_population(self):
         if self.strategy == Strategy.SINGLE_VARIANCE:
-            strategy_parameters = [random_with_seed(self.random_seed).randn()]
+            strategy_parameters = self.random.randn(1)
         elif self.strategy == Strategy.MULTIPLE_VARIANCE:
-            strategy_parameters = random_with_seed(self.random_seed).randn(self.individual_length)
+            strategy_parameters = self.random.randn(self.individual_length)
         elif self.strategy == Strategy.FULL_VARIANCE:
-            strategy_parameters = random_with_seed(self.random_seed).randn(
+            strategy_parameters = self.random.randn(
                 int((self.individual_length + 1) * self.individual_length / 2))
         else:
             raise ValueError("Provided strategy parameter was not an instance of Strategy")
         return [
             Individual(
-                self.warm_start + random_with_seed(self.random_seed).normal(
+                self.warm_start + self.random.normal(
                     loc=self.mean, scale=self.std, size=self.individual_length
                 ),
                 self.strategy, strategy_parameters,
-                random_seed=self.random_seed
+                random_seed=self.random
             ) for _ in range(self.population_size)
         ]
