@@ -60,11 +60,7 @@ class EvoPy:
             population = sorted(children + population, reverse=self.maximize,
                                 key=lambda individual: individual.evaluate(self.fitness_function))
             population = population[:self.population_size]
-            if not self.maximize:
-                best = population[0] if population[0].fitness > best.fitness else best
-            else:
-                best = population[0] if population[0].fitness < best.fitness else best
-
+            best = population[0]
             if self.reporter is not None:
                 self.reporter(ProgressReport(generation, best.genotype, best.fitness))
 
