@@ -1,6 +1,7 @@
 # evopy
 
 [![Build Status](https://travis-ci.com/evopy/evopy.svg?branch=master)](https://travis-ci.com/evopy/evopy)
+[![codecov](https://codecov.io/gh/evopy/evopy/branch/master/graph/badge.svg)](https://codecov.io/gh/evopy/evopy)
 [![PyPI](https://img.shields.io/pypi/v/evopy.svg)](https://pypi.org/project/evopy/)
 [![Docs](https://readthedocs.org/projects/evopy/badge/?version=latest)](http://evopy.readthedocs.io/)
 
