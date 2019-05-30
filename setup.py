@@ -14,7 +14,7 @@ setup(name='evopy',
       long_description=open('README.md').read(),
       long_description_content_type="text/markdown",
       install_requires=[
-          "numpy"
+          "numpy",
       ],
       classifiers=[
           "Programming Language :: Python :: 3",

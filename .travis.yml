@@ -5,6 +5,7 @@ python:
 install:
   - pip install -r requirements.dev.txt
 script:
-  - nosetests
+  - nosetests --with-coverage --cover-package=evopy --cover-html --cover-branches --cover-erase
+  - codecov
   - pylint evopy
   - pylint test
