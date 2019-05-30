@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='evopy',
-      version='0.2.1',
+      version='0.2.2',
       description='Evolutionary Strategies made simple',
       url='http://github.com/evopy/evopy',
       author='evopy',
