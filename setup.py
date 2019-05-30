@@ -20,6 +20,7 @@ setup(name='evopy',
           "parameterized",
           "sphinx",
           "sphinx-rtd-theme",
+          "codecov",
       ],
       classifiers=[
           "Programming Language :: Python :: 3",
