@@ -67,7 +67,7 @@ class Individual:
                        self.strategy_parameters[0] * self.random.randn(self.length)
         scale_factor = self.random.randn() * np.sqrt(1 / (2 * self.length))
         new_parameters = [max(self.strategy_parameters[0] * np.exp(scale_factor), self._EPSILON)]
-        return Individual(new_genotype, self.strategy, new_parameters)
+        return Individual(new_genotype, self.strategy, new_parameters, random_seed=self.random)
 
     def _reproduce_multiple_variance(self):
         """Create a single offspring individual from the set genotype and strategy.
