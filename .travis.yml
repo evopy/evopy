@@ -3,7 +3,7 @@ python:
   - "3.5"
   - "3.6"
 install:
-  - pip install .
+  - pip install -r requirements.dev.txt
 script:
   - nosetests --with-coverage --cover-package=evopy --cover-html --cover-branches --cover-erase
   - codecov

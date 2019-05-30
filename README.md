@@ -60,7 +60,7 @@ For more detailed information on evopy's functionality, have a look at [the docs
 [Clone this repository](https://github.com/evopy/evopy) and fetch all dependencies from within the cloned directory:
 
 ```
-pip install .
+pip install -r requirements.dev.txt
 ```
 
 Run all tests with:

@@ -1,0 +1,7 @@
+nose
+numpy
+pylint
+parameterized
+sphinx
+sphinx-rtd-theme
+codecov

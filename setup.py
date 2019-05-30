@@ -15,12 +15,6 @@ setup(name='evopy',
       long_description_content_type="text/markdown",
       install_requires=[
           "numpy",
-          "nose",
-          "pylint",
-          "parameterized",
-          "sphinx",
-          "sphinx-rtd-theme",
-          "codecov",
       ],
       classifiers=[
           "Programming Language :: Python :: 3",
