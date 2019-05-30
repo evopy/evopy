@@ -105,3 +105,9 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# docs
+docs/api
+docs/_build
+
+# coverage
+cover/

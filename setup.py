@@ -1,19 +1,20 @@
 from setuptools import setup
 
 setup(name='evopy',
-      version='0.1',
+      version='0.2.1',
       description='Evolutionary Strategies made simple',
       url='http://github.com/evopy/evopy',
       author='evopy',
       author_email='info@gandreadis.com',
       license='MIT',
-      packages=['evopy'],
+      packages=[
+          'evopy',
+          'evopy.utils',
+      ],
       long_description=open('README.md').read(),
       long_description_content_type="text/markdown",
       install_requires=[
-          "numpy",
-          "nose",
-          "pylint",
+          "numpy"
       ],
       classifiers=[
           "Programming Language :: Python :: 3",

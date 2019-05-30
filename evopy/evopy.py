@@ -2,13 +2,17 @@
 import numpy as np
 
 from evopy.individual import Individual
+from evopy.progress_report import ProgressReport
+from evopy.strategy import Strategy
+from evopy.utils import random_with_seed
 
 
 class EvoPy:
     """Main class of the EvoPy package."""
 
     def __init__(self, fitness_function, individual_length, warm_start=None, generations=100,
-                 population_size=30, num_children=1, mean=0, std=1, maximize=False):
+                 population_size=30, num_children=1, mean=0, std=1, maximize=False,
+                 strategy=Strategy.SINGLE_VARIANCE, random_seed=None, reporter=None):
         """Initializes an EvoPy instance.
 
         :param fitness_function: the fitness function on which the individuals are evaluated
@@ -19,7 +23,11 @@ class EvoPy:
         :param num_children: the number of children generated per parent individual
         :param mean: the mean for sampling the random offsets of the initial population
         :param std: the standard deviation for sampling the random offsets of the initial population
-        :param maximize: whether the fitness function should be maximized or minimized.
+        :param maximize: whether the fitness function should be maximized or minimized
+        :param strategy: the strategy used to generate offspring by individuals. For more
+                         information, check the Strategy enum
+        :param random_seed: the seed to use for the random number generator
+        :param reporter: callback to be invoked at each generation with a ProgressReport as argument
         """
         self.fitness_function = fitness_function
         self.individual_length = individual_length
@@ -30,9 +38,15 @@ class EvoPy:
         self.mean = mean
         self.std = std
         self.maximize = maximize
+        self.strategy = strategy
+        self.random_seed = random_seed
+        self.reporter = reporter
 
     def run(self):
-        """Run the evolutionary strategy algorithm."""
+        """Run the evolutionary strategy algorithm.
+
+        :return: the best genotype found
+        """
         if self.individual_length == 0:
             return None
 
@@ -40,7 +54,7 @@ class EvoPy:
         best = sorted(population, reverse=self.maximize,
                       key=lambda individual: individual.evaluate(self.fitness_function))[0]
 
-        for _ in range(self.generations):
+        for generation in range(self.generations):
             children = [parent.reproduce() for _ in range(self.num_children)
                         for parent in population]
             population = sorted(children + population, reverse=self.maximize,
@@ -51,14 +65,27 @@ class EvoPy:
             else:
                 best = population[0] if population[0].fitness < best.fitness else best
 
+            if self.reporter is not None:
+                self.reporter(ProgressReport(generation, best.genotype, best.fitness))
+
         return best.genotype
 
     def _init_population(self):
+        if self.strategy == Strategy.SINGLE_VARIANCE:
+            strategy_parameters = [random_with_seed(self.random_seed).randn()]
+        elif self.strategy == Strategy.MULTIPLE_VARIANCE:
+            strategy_parameters = random_with_seed(self.random_seed).randn(self.individual_length)
+        elif self.strategy == Strategy.FULL_VARIANCE:
+            strategy_parameters = random_with_seed(self.random_seed).randn(
+                int((self.individual_length + 1) * self.individual_length / 2))
+        else:
+            raise ValueError("Provided strategy parameter was not an instance of Strategy")
         return [
             Individual(
-                self.warm_start + np.random.normal(
+                self.warm_start + random_with_seed(self.random_seed).normal(
                     loc=self.mean, scale=self.std, size=self.individual_length
                 ),
-                np.random.randn()
+                self.strategy, strategy_parameters,
+                random_seed=self.random_seed
             ) for _ in range(self.population_size)
         ]
