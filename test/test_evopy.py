@@ -3,11 +3,13 @@ import numpy as np
 
 from evopy import EvoPy
 
+
 def test_random_consistency():
     """Test whether the random state gives consistent runs when initialized."""
     x_first = EvoPy(lambda x: pow(x, 2), 1, random_seed=42).run()
     x_second = EvoPy(lambda x: pow(x, 2), 1, random_seed=42).run()
     assert x_first == x_second
+
 
 def test_random_consistency_multiple_runs():
     """"Test whether the random state is not re-used in sequential runs"""
@@ -15,6 +17,7 @@ def test_random_consistency_multiple_runs():
     x_first = evopy.run()
     x_second = evopy.run()
     assert x_first != x_second
+
 
 def test_simple_use_case():
     """Test whether evopy can successfully run for a simple evaluation function."""
@@ -24,8 +27,9 @@ def test_simple_use_case():
     assert isinstance(best_individual, np.ndarray)
     assert best_individual.size == 1
 
+
 def test_early_timed_stop():
-    """Test whether evopy can successfully stop early when given a time constraint."""
+    """Test whether evopy can successfully stop early when given a specified time constraint."""
     count = [0]
 
     def increment_reporter(report):
@@ -36,8 +40,9 @@ def test_early_timed_stop():
 
     assert count[0] == 1
 
+
 def test_early_target_value_stop():
-    """Test whether evopy can successfully stop after achieving target value."""
+    """Test whether evopy can successfully stop after achieving a specified target value."""
     count = [0]
 
     def increment_reporter(report):
@@ -47,6 +52,7 @@ def test_early_target_value_stop():
     evopy.run()
 
     assert count[0] == 1
+
 
 def test_empty_input_array():
     """Test whether evopy can successfully run for a simple evaluation function."""

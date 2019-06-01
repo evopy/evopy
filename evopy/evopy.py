@@ -11,7 +11,7 @@ from evopy.utils import random_with_seed
 
 class EvoPy:
     """Main class of the EvoPy package."""
-    # pylint: disable=R0914
+
     def __init__(self, fitness_function, individual_length, warm_start=None, generations=100,
                  population_size=30, num_children=1, mean=0, std=1, maximize=False,
                  strategy=Strategy.SINGLE_VARIANCE, random_seed=None, reporter=None,
@@ -51,13 +51,17 @@ class EvoPy:
         self.max_run_time = max_run_time
 
     def _check_early_stop(self, start_time, best):
-        """Utility method for early stopping
-        """
-        return (self.max_run_time is not None and \
-            (time.time() - start_time) > self.max_run_time) \
-        or (self.target_fitness_value is not None and \
-            abs(best.fitness - self.target_fitness_value) < np.finfo(float).eps)
+        """Check whether the algorithm can stop early, based on time and fitness target.
 
+        :param start_time: the starting time to compare against
+        :param best: the current best individual
+        :return: whether the algorithm should be terminated early
+        """
+        return (self.max_run_time is not None
+                and (time.time() - start_time) > self.max_run_time) \
+               or \
+               (self.target_fitness_value is not None
+                and abs(best.fitness - self.target_fitness_value) < np.finfo(float).eps)
 
     def run(self):
         """Run the evolutionary strategy algorithm.
@@ -86,6 +90,7 @@ class EvoPy:
 
             if self._check_early_stop(start_time, best):
                 break
+
         return best.genotype
 
     def _init_population(self):
