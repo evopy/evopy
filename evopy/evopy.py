@@ -1,4 +1,6 @@
 """Module used for the execution of the evolutionary algorithm."""
+import time
+
 import numpy as np
 
 from evopy.individual import Individual
@@ -12,7 +14,8 @@ class EvoPy:
 
     def __init__(self, fitness_function, individual_length, warm_start=None, generations=100,
                  population_size=30, num_children=1, mean=0, std=1, maximize=False,
-                 strategy=Strategy.SINGLE_VARIANCE, random_seed=None, reporter=None):
+                 strategy=Strategy.SINGLE_VARIANCE, random_seed=None, reporter=None,
+                 target_fitness_value=None, max_run_time=None):
         """Initializes an EvoPy instance.
 
         :param fitness_function: the fitness function on which the individuals are evaluated
@@ -28,6 +31,8 @@ class EvoPy:
                          information, check the Strategy enum
         :param random_seed: the seed to use for the random number generator
         :param reporter: callback to be invoked at each generation with a ProgressReport as argument
+        :param target_fitness_value: target fitness value for early stopping
+        :param max_run_time: maximum time allowed to run in seconds
         """
         self.fitness_function = fitness_function
         self.individual_length = individual_length
@@ -42,6 +47,21 @@ class EvoPy:
         self.random_seed = random_seed
         self.random = random_with_seed(self.random_seed)
         self.reporter = reporter
+        self.target_fitness_value = target_fitness_value
+        self.max_run_time = max_run_time
+
+    def _check_early_stop(self, start_time, best):
+        """Check whether the algorithm can stop early, based on time and fitness target.
+
+        :param start_time: the starting time to compare against
+        :param best: the current best individual
+        :return: whether the algorithm should be terminated early
+        """
+        return (self.max_run_time is not None
+                and (time.time() - start_time) > self.max_run_time) \
+               or \
+               (self.target_fitness_value is not None
+                and abs(best.fitness - self.target_fitness_value) < np.finfo(float).eps)
 
     def run(self):
         """Run the evolutionary strategy algorithm.
@@ -50,6 +70,8 @@ class EvoPy:
         """
         if self.individual_length == 0:
             return None
+
+        start_time = time.time()
 
         population = self._init_population()
         best = sorted(population, reverse=self.maximize,
@@ -62,8 +84,12 @@ class EvoPy:
                                 key=lambda individual: individual.evaluate(self.fitness_function))
             population = population[:self.population_size]
             best = population[0]
+
             if self.reporter is not None:
                 self.reporter(ProgressReport(generation, best.genotype, best.fitness))
+
+            if self._check_early_stop(start_time, best):
+                break
 
         return best.genotype
 
